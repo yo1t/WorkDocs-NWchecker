@@ -4,36 +4,52 @@ $ssid = "yo1-007"
 # Set Checking interval for WiFi-SSID
 $interval = 180
 
-
 # Set Environment for WorkDocs
 $WorkDocs = "\Programs\Amazon.com, Inc\Amazon WorkDocs.appref-ms"
 $WorkDocsPath = [Environment]::GetFolderPath('StartMenu') + $WorkDocs
 $WorkDocsProcessName = "AmazonWorkDocs"
 $LogMessage = ""
 
+# function of start process
+function StartProcessList {
+    Start-Process $WorkDocsPath
+}
+
+# function of stop process
+function StopProcessList {
+    Stop-Process -name $WorkDocsProcessName
+}
+
+$ManageProcess = "WorkDocs" 
+
+
 # Main Process
 while (1) {
     # Get SSID of wifi that is currently connected.
     $netsh_ssid = netsh wlan show interface | Select-String "    SSID                   :"
     $now_ssid = $netsh_ssid -replace ".*: "
+    $LogMessage = "Now SSID is " + $now_ssid + ". " + $ManageProcess +": "
 
     # Get Now time for log
     $nowtime = Get-Date -Format "yyyy/MM/dd-HH:mm:ss"
 
+
     if ( $now_ssid -eq $ssid ) {
         # Process of Stop WorkDocs
         if ( ( Get-Process $WorkDocsProcessName -ErrorAction 0 )  ) {
-            Stop-Process -name $WorkDocsProcessName -ErrorAction 0
+            StopProcessList
+            $logmessage = $logmessage + "try to stop."
+        } else {
+            $LogMessage = $LogMessage + "stopped."
         }
-        $LogMessage = "Now SSID is " + $now_ssid +". WorkDocs stopped."
 
     } else {
         # Process of Start WorkDocs
         if ( ( Get-Process $WorkDocsProcessName -ErrorAction 0 )  ) {
-            $LogMessage = "WorkDocs is still running."
+            $LogMessage = $LogMessage + "still running."
         } else {
-            Start-Process $WorkDocsPath
-            $LogMessage = "Now SSID is " + $now_ssid +". WorkDocs is starting."
+            StartProcessList
+            $LogMessage = $LogMessage + "running."
         }
     }
 
