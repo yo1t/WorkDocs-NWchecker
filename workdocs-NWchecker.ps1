@@ -1,8 +1,8 @@
-﻿# Set WiFi-SSID, you want to stop WorkDocs 
-$ssid = "yo1-mobile"
+﻿# CHANGE VALUE. SET YOUR WiFi-SSID, you want to stop WorkDocs. 
+$ssid = "yo1-007"
 
 # Set Checking interval for WiFi-SSID
-$interval = 60
+$interval = 180
 
 
 # Set Environment for WorkDocs
@@ -13,15 +13,15 @@ $LogMessage = ""
 
 # Main Process
 while (1) {
-    # Get now connect WiFi-SSID
+    # Get SSID of wifi that is currently connected.
     $netsh_ssid = netsh wlan show interface | Select-String "    SSID                   :"
     $now_ssid = $netsh_ssid -replace ".*: "
-    
+
     # Get Now time for log
     $nowtime = Get-Date -Format "yyyy/MM/dd-HH:mm:ss"
 
     if ( $now_ssid -eq $ssid ) {
-    　　　　# Process of Stop WorkDocs
+        # Process of Stop WorkDocs
         if ( ( Get-Process $WorkDocsProcessName -ErrorAction 0 )  ) {
             Stop-Process -name $WorkDocsProcessName -ErrorAction 0
         }
@@ -40,7 +40,6 @@ while (1) {
     # Oputput Log
     Write-Output ($nowtime + " " + $LogMessage)
 
-    # Sleep for several seconds
+    # sleep for several seconds
     Start-Sleep -Seconds $interval
 }
-
