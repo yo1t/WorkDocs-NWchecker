@@ -1,8 +1,22 @@
-﻿# CHANGE VALUE. SET YOUR WiFi-SSID, you want to stop WorkDocs. 
-$ssid = "yo1-007"
+﻿# Define of argument parameter
+param( $ssid, $t )
+
+Write-Output( "WorkDocs-NWchecker ver.0.2   (-t [interval(second)] -ssid [WiFi-SSID])")
+
+# CHANGE VALUE. SET YOUR WiFi-SSID, you want to stop WorkDocs. 
+if ( $ssid -eq $null ) {
+    $ssid = "yo1-007"
+}
+Write-Output( "WiFi SSID: " + $ssid )
 
 # Set Checking interval for WiFi-SSID
 $interval = 180
+if ( ( $t -ge 3 ) -And ( $t -le 3600 ) ) { 
+    $interval = $t
+}
+Write-Output( "Interval : " + $interval )
+
+Write-Output( "-----" )
 
 # Set Environment for WorkDocs
 if ( $Home.Contains( ":" ) ) {
