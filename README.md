@@ -1,5 +1,29 @@
 # WorkDocs-NWchecker
+日本語の説明は、この下の方に書いています。
 
+## What is this?
+When it is connected to a particular WiFi, the script to stop the process of Amazon WorkDocs sync client. Coding in PoweShell.
+Published in this URL: http://qiita.com/yo1t/items/bf9d3c3c6baeaaafc681
+
+## How to install
+### Windows
+Put workdocs-NWchecker.ps1 to the appropriate folder.
+
+### MacOS or MacOS X
+I checked MacOS X El capitan and MacOS Sierra.
+At the first, install PowerShell for Mac OS X. Download the latest .pkg from the link of the following.
+https://github.com/PowerShell/PowerShell/releases/
+Put workdocs-NWchecker.ps1 to the appropriate folder.
+
+## How to use (in the case of ver. 0.2)
+Run the powershell workdocs-NWchecker.ps1. (Example: powershell workdocs-NWchecker.ps1 -t 30 -ssid yo1-mobile)
+-t [interval (second)] to check the process specified in the number of seconds. (Can be specified from 3 seconds to 3600 seconds.) Example: -t 30
+-ssid the [WiFi-SSID] specified WiFi SSID to be checked. Example: -ssid yo1-007
+If your WorkDocs is started with administrative privileges, PowerShell also start with administrator privileges.
+
+This script is suported both Windows and MacOS, one script. Although, I don't have good information of identification method of the OS in the PowerShell. If $Home does not contains ":"(C: If you do not include a drive letter, etc.), determined MacOS. 
+
+---
 ## What is this?
 Amazon WorkDocs sync クライアントをある特定のWiFiに接続されている時は、プロセスを停止するスクリプト。PoweShellでコーディング。
 
