@@ -77,7 +77,7 @@ function GetNowUSBTether( $check_int ) {
     } else {
         # for Mac OS X
         $int_status = ifconfig $check_int |  Select-String "status:" 
-        if( $int_status.Contains( "Active" ) ) {
+        if( $int_status.Contains( "active" ) ) {
             $usbtether_status = "Up"
         }
     }
