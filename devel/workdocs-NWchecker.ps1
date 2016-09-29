@@ -1,24 +1,26 @@
 ﻿# Define of argument parameter
 param( $ssid, $t, $usbtether )
 
-Write-Output( "WorkDocs-NWchecker ver.0.2   (-t [interval(second)] -ssid [WiFi-SSID]) -interface [Ethernet device such as USB-tethering]")
+Write-Output( "WorkDocs-NWchecker ver.0.2.2" )
+Write-Output( "(-t [interval(second)] -ssid [WiFi-SSID]) -interface [Ethernet device name of USB-tethering]")
+Write-Output( "" )
 
 # SET YOUR WiFi-SSID, you want to stop WorkDocs. 
 if ( $ssid -eq $null ) {
     $ssid = "yo1-007"
 }
-Write-Output( "WiFi SSID   : " + $ssid )
+Write-Output( "WiFi SSID    : " + $ssid )
 
 # Set Checking interval for WiFi-SSID
 $interval = 20
 if ( ( $t -ge 3 ) -And ( $t -le 3600 ) ) { 
     $interval = $t
 }
-Write-Output( "Interval    : " + $interval )
+Write-Output( "Interval     : " + $interval )
 
 # SET Ethernet device such as USB-tethering, you want to stop WorkDocs. 
 if ( $usbtether -eq $null ) {
-    $usbtether = "ローカル エリア接続* 2"
+    $usbtether = "none"
 }
 Write-Output( "USB-Tethering: " + $usbtether )
 
@@ -67,14 +69,17 @@ function GetNowSSID() {
 
 
 function GetNowUSBTether( $check_int ) {
+    $usbtether_status = ""
     if ( $Home.Contains( ":" ) ) {
         # for Windows
         $usbtether_status = [System.Net.NetworkInformation.NetworkInterface]::GetAllNetworkInterfaces() | where {$_.Name -eq $check_int } | Select-Object -ExpandProperty OperationalStatus
         
     } else {
         # for Mac OS X
-        $usbtether_status = "Up"
-
+        $int_status = ifconfig $check_int |  Select-String "status:" 
+        if( $int_status.Contains( "Active" ) ) {
+            $usbtether_status = "Up"
+        }
     }
     return $usbtether_status
 }
