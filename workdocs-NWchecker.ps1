@@ -1,7 +1,22 @@
 ﻿# Define of argument parameter
-param( $ssid, $t )
+param( $help, $version, $ssid, $t )
 
-Write-Output( "WorkDocs-NWchecker ver.0.2   (-t [interval(second)] -ssid [WiFi-SSID])")
+Write-Output( "WorkDocs-NWchecker ver.0.2")
+
+if ( $help -ne $null ) {
+  Write-Output( "---" )
+  Write-Output( "Run workdocs-NWchecker." )
+  Write-Output( " (Example: workdocs-NWchecker -t 30 -ssid yo1-mobile)" )
+  Write-Output( " " )
+  Write-Output( "-t [interval (second)] to check the process specified in the number of seconds. (Can be specified from 3 seconds to 3600 seconds.) Example: -t 30" )
+  Write-Output( " " )
+  Write-Output( "-ssid the [WiFi-SSID] specified WiFi SSID to be checked. Example: -ssid yo1-007" )
+  Write-Output( " " )
+  Write-Output( "If your WorkDocs is started with administrative privileges, PowerShell also start with administrator privileges." )
+  Write-Output( " " )
+  exit
+}
+
 
 # CHANGE VALUE. SET YOUR WiFi-SSID, you want to stop WorkDocs. 
 if ( $ssid -eq $null ) {
