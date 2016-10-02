@@ -1,7 +1,7 @@
 if [ -e "/usr/local/bin/powershell" ]; then
   echo "found powershell"
 else
-  wget https://github.com/PowerShell/PowerShell/releases/download/v6.0.0-alpha.10/powershell-6.0.0-alpha.10.pkg
+  curl -L -O "https://github.com/PowerShell/PowerShell/releases/download/v6.0.0-alpha.10/powershell-6.0.0-alpha.10.pkg"
   sudo installer -pkg powershell-6.0.0-alpha.10.pkg -target /
   rm powershell-6.0.0-alpha.10.pkg
 fi

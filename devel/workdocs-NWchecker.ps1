@@ -1,5 +1,5 @@
 ﻿# Define of argument parameter
-param( $ssid, $t, $usbtether )
+param( $ssid, $t, $interface )
 
 Write-Output( "WorkDocs-NWchecker ver.0.2.2" )
 Write-Output( "(-t [interval(second)] -ssid [WiFi-SSID]) -interface [Ethernet device name of USB-tethering]")
@@ -19,10 +19,7 @@ if ( ( $t -ge 3 ) -And ( $t -le 3600 ) ) {
 Write-Output( "Interval     : " + $interval )
 
 # SET Ethernet device such as USB-tethering, you want to stop WorkDocs. 
-if ( $usbtether -eq $null ) {
-    $usbtether = "none"
-}
-Write-Output( "USB-Tethering: " + $usbtether )
+Write-Output( "USB-Tethering: " + $interface )
 
 
 Write-Output( "-----" )
@@ -70,15 +67,19 @@ function GetNowSSID() {
 
 function GetNowUSBTether( $check_int ) {
     $usbtether_status = ""
-    if ( $Home.Contains( ":" ) ) {
-        # for Windows
-        $usbtether_status = [System.Net.NetworkInformation.NetworkInterface]::GetAllNetworkInterfaces() | where {$_.Name -eq $check_int } | Select-Object -ExpandProperty OperationalStatus
+    if ( ( $check_int -ne "none" ) -And ( $check_int -ne $null ) ) {
+        if ( $Home.Contains( ":" ) ) {
+            # for Windows
+            $usbtether_status = [System.Net.NetworkInformation.NetworkInterface]::GetAllNetworkInterfaces() | where {$_.Name -eq $check_int } | Select-Object -ExpandProperty OperationalStatus
         
-    } else {
-        # for Mac OS X
-        $int_status = ifconfig $check_int |  Select-String "status:" 
-        if( $int_status.Contains( "active" ) ) {
-            $usbtether_status = "Up"
+        } else {
+            # for Mac OS X
+            $int_status = ifconfig $check_int 
+            if( $int_status.Contains( "status: active" ) ) {
+                $usbtether_status = "Up"
+            } else {
+                $usbtether_status = "Down"
+            }
         }
     }
     return $usbtether_status
@@ -92,10 +93,10 @@ while (1) {
     # Get SSID of wifi that is currently connected.
 
     $now_ssid = GetNowSSID
-    $now_USBtether_status = GetNowUSBTether( $usbtether )
+    $now_USBtether_status = GetNowUSBTether( $interface )
     
     $LogMessage = "Now SSID is " + $now_ssid + ". "
-    if ( $usbtether -ne "none" ) {
+    if ( $interface -ne $null ) {
         $LogMessage = $LogMessage + "Now USB Tethering is " + $now_USBtether_status + ". "
     }
     $LogMessage = $LogMessage + $ManageProcess +": "
