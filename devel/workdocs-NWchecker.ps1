@@ -66,7 +66,7 @@ function GetNowSSID() {
 
 
 function GetNowUSBTether( $check_int ) {
-    $usbtether_status = ""
+    $usbtether_status = "Down"
     if ( ( $check_int -ne "none" ) -And ( $check_int -ne $null ) ) {
         if ( $Home.Contains( ":" ) ) {
             # for Windows
@@ -74,11 +74,13 @@ function GetNowUSBTether( $check_int ) {
         
         } else {
             # for Mac OS X
-            $int_status = ifconfig $check_int 
-            if( $int_status.Contains( "status: active" ) ) {
-                $usbtether_status = "Up"
-            } else {
-                $usbtether_status = "Down"
+            [System.String]$int_status = ifconfig $check_int
+            if ( [bool]$int_status ) {
+                if ( $int_status.Contains( "status: active" ) ) {
+                    $usbtether_status = "Up"
+                } else {
+                    $usbtether_ststus = "Down"
+                }
             }
         }
     }
