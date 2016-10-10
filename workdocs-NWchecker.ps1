@@ -1,7 +1,7 @@
 ﻿# Define of argument parameter
 param( $ssid, $t, $interface )
 
-Write-Output( "WorkDocs-NWchecker ver.0.2.2" )
+Write-Output( "WorkDocs-NWchecker ver.0.3" )
 Write-Output( "(-t [interval(second)] -ssid [WiFi-SSID]) -interface [Ethernet device name of USB-tethering]")
 Write-Output( "" )
 
