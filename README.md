@@ -4,6 +4,9 @@
 When it is connected to a particular WiFi, the script to stop the process of Amazon WorkDocs sync client. Coding in PoweShell.
 Published in this URL: http://qiita.com/yo1t/items/bf9d3c3c6baeaaafc681
 
+## How to download
+[https://github.com/yo1t/WorkDocs-NWchecker/releases](https://github.com/yo1t/WorkDocs-NWchecker/releases)
+
 ## How to install
 ### Windows
 1. Manual Setup
@@ -41,12 +44,15 @@ Amazon WorkDocs sync クライアントをある特定のWiFiに接続されて�
 このURLで公開：
 [http://qiita.com/yo1t/items/bf9d3c3c6baeaaafc681](http://qiita.com/yo1t/items/bf9d3c3c6baeaaafc681)
 
+## ダウンロード
+[https://github.com/yo1t/WorkDocs-NWchecker/releases](https://github.com/yo1t/WorkDocs-NWchecker/releases)
 
 ## インストール方法と使用方法
 ### Windowsの場合
 1. マニュアルセットアップ
   - workdocs-NWchecker.ps1 を適当なフォルダに置く。
-2. インストーラ（c:\toolsにコピーします。） 
+2. インストーラ
+（c:\toolsにコピーします。） 
   - cd installer\windows
   - setup.bat
 
@@ -56,7 +62,8 @@ Amazon WorkDocs sync クライアントをある特定のWiFiに接続されて�
   - Mac OS X用のPowerShellをインストール。下記ののリンクから最新の.pkgをダウンロードし、インストールする。
     - [https://github.com/PowerShell/PowerShell/releases/](https://github.com/PowerShell/PowerShell/releases/)
   - workdocs-NWchecker.ps1 を適当なフォルダに置く。
-2. インストーラー（/usr/local/binにコピーします。）
+2. インストーラー
+（/usr/local/binにコピーします。）
   - cd ./installer/MacOS
   - chmod +x install.sh
   - ./install.sh
