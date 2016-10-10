@@ -1,35 +1,26 @@
 ﻿# Define of argument parameter
-param( $help, $version, $ssid, $t )
+param( $ssid, $t, $interface )
 
-Write-Output( "WorkDocs-NWchecker ver.0.2")
+Write-Output( "WorkDocs-NWchecker ver.0.2.2" )
+Write-Output( "(-t [interval(second)] -ssid [WiFi-SSID]) -interface [Ethernet device name of USB-tethering]")
+Write-Output( "" )
 
-if ( $help -ne $null ) {
-  Write-Output( "---" )
-  Write-Output( "Run workdocs-NWchecker." )
-  Write-Output( " (Example: workdocs-NWchecker -t 30 -ssid yo1-mobile)" )
-  Write-Output( " " )
-  Write-Output( "-t [interval (second)] to check the process specified in the number of seconds. (Can be specified from 3 seconds to 3600 seconds.) Example: -t 30" )
-  Write-Output( " " )
-  Write-Output( "-ssid the [WiFi-SSID] specified WiFi SSID to be checked. Example: -ssid yo1-007" )
-  Write-Output( " " )
-  Write-Output( "If your WorkDocs is started with administrative privileges, PowerShell also start with administrator privileges." )
-  Write-Output( " " )
-  exit
-}
-
-
-# CHANGE VALUE. SET YOUR WiFi-SSID, you want to stop WorkDocs. 
+# SET YOUR WiFi-SSID, you want to stop WorkDocs. 
 if ( $ssid -eq $null ) {
     $ssid = "yo1-007"
 }
-Write-Output( "WiFi SSID: " + $ssid )
+Write-Output( "WiFi SSID    : " + $ssid )
 
 # Set Checking interval for WiFi-SSID
-$interval = 180
+$interval = 20
 if ( ( $t -ge 3 ) -And ( $t -le 3600 ) ) { 
     $interval = $t
 }
-Write-Output( "Interval : " + $interval )
+Write-Output( "Interval     : " + $interval )
+
+# SET Ethernet device such as USB-tethering, you want to stop WorkDocs. 
+Write-Output( "USB-Tethering: " + $interface )
+
 
 Write-Output( "-----" )
 
@@ -62,10 +53,7 @@ function StopProcessList {
 
 $ManageProcess = "WorkDocs" 
 
-
-# Main Process
-while (1) {
-    # Get SSID of wifi that is currently connected.
+function GetNowSSID() {
     if ( $Home.Contains( ":" ) ) {
         # for Windows
         $netsh_ssid = netsh wlan show interface | Select-String "    SSID                   :"
@@ -73,13 +61,52 @@ while (1) {
         # for Mac OS X
         $netsh_ssid = /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I | Select-String "           SSID:" 
     }
-    $now_ssid = $netsh_ssid -replace ".*: "
-    $LogMessage = "Now SSID is " + $now_ssid + ". " + $ManageProcess +": "
+    return $netsh_ssid -replace ".*: "
+}
+
+
+function GetNowUSBTether( $check_int ) {
+    $usbtether_status = "Down"
+    if ( ( $check_int -ne "none" ) -And ( $check_int -ne $null ) ) {
+        if ( $Home.Contains( ":" ) ) {
+            # for Windows
+            $usbtether_status = [System.Net.NetworkInformation.NetworkInterface]::GetAllNetworkInterfaces() | where {$_.Name -eq $check_int } | Select-Object -ExpandProperty OperationalStatus
+        
+        } else {
+            # for Mac OS X
+            [System.String]$int_status = ifconfig $check_int
+            if ( [bool]$int_status ) {
+                if ( $int_status.Contains( "status: active" ) ) {
+                    $usbtether_status = "Up"
+                } else {
+                    $usbtether_ststus = "Down"
+                }
+            }
+        }
+    }
+    return $usbtether_status
+}
+
+
+
+
+# Main Process
+while (1) {
+    # Get SSID of wifi that is currently connected.
+
+    $now_ssid = GetNowSSID
+    $now_USBtether_status = GetNowUSBTether( $interface )
+    
+    $LogMessage = "Now SSID is " + $now_ssid + ". "
+    if ( $interface -ne $null ) {
+        $LogMessage = $LogMessage + "Now USB Tethering is " + $now_USBtether_status + ". "
+    }
+    $LogMessage = $LogMessage + $ManageProcess +": "
 
     # Get Now time for log
     $nowtime = Get-Date -Format "yyyy/MM/dd-HH:mm:ss"
 
-    if ( $now_ssid -eq $ssid ) {
+    if ( ( $now_ssid -eq $ssid ) -Or ( $now_USBtether_status -eq "Up" ) ) {
         # Process of Stop WorkDocs
         if ( ( Get-Process $WorkDocsProcessName -ErrorAction 0 )  ) {
             StopProcessList
