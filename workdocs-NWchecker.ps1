@@ -1,8 +1,8 @@
 ﻿# Define of argument parameter
-param( $ssid, $t, $interface )
+param( $ssid, $t, $interface, $bssid )
 
-Write-Output( "WorkDocs-NWchecker ver.0.3" )
-Write-Output( "(-t [interval(second)] -ssid [WiFi-SSID]) -interface [Ethernet device name of USB-tethering]")
+Write-Output( "WorkDocs-NWchecker ver.0.3.1" )
+Write-Output( "(-t [interval(second)] -ssid [WiFi-SSID] -bssid [WiFi-BSSID] -interface [Ethernet device name of USB-tethering]")
 Write-Output( "" )
 
 # SET YOUR WiFi-SSID, you want to stop WorkDocs. 
@@ -10,6 +10,7 @@ if ( $ssid -eq $null ) {
     $ssid = "yo1-007"
 }
 Write-Output( "WiFi SSID    : " + $ssid )
+Write-Output( "WiFi BSSID   : " + $bssid )
 
 # Set Checking interval for WiFi-SSID
 $interval = 20
@@ -64,6 +65,18 @@ function GetNowSSID() {
     return $netsh_ssid -replace ".*: "
 }
 
+function GetNowBSSID() {
+    if ( $Home.Contains( ":" ) ) {
+        # for Windows
+        $netsh_bssid = netsh wlan show interface | Select-String "    BSSID                  :"
+    } else {
+        # for Mac OS X
+        $netsh_bssid = /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I | Select-String "          BSSID:" 
+    }
+    return $netsh_bssid -replace ".*: "
+}
+
+
 
 function GetNowUSBTether( $check_int ) {
     $usbtether_status = "Down"
@@ -95,18 +108,22 @@ while (1) {
     # Get SSID of wifi that is currently connected.
 
     $now_ssid = GetNowSSID
+    $now_bssid = GetNowBSSID
     $now_USBtether_status = GetNowUSBTether( $interface )
     
     $LogMessage = "Now SSID is " + $now_ssid + ". "
     if ( $interface -ne $null ) {
         $LogMessage = $LogMessage + "Now USB Tethering is " + $now_USBtether_status + ". "
     }
+    if ( $bssid -ne $null ) {
+        $LogMessage = $LogMessage + "Now BSSID is " + $now_bssid + ". "
+    }
     $LogMessage = $LogMessage + $ManageProcess +": "
 
     # Get Now time for log
     $nowtime = Get-Date -Format "yyyy/MM/dd-HH:mm:ss"
 
-    if ( ( $now_ssid -eq $ssid ) -Or ( $now_USBtether_status -eq "Up" ) ) {
+    if ( ( $now_ssid -eq $ssid ) -Or ( $now_USBtether_status -eq "Up" ) -Or ( $now_bssid -eq $bssid ) ) {
         # Process of Stop WorkDocs
         if ( ( Get-Process $WorkDocsProcessName -ErrorAction 0 )  ) {
             StopProcessList

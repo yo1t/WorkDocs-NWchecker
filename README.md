@@ -27,10 +27,11 @@ Published in this URL: http://qiita.com/yo1t/items/bf9d3c3c6baeaaafc681
   - chmod +x install.sh
   - ./install.sh
 
-## How to use (in the case of ver. 0.3)
+## How to use (ver. 0.4)
 - Run the powershell workdocs-NWchecker.ps1. (Example: powershell workdocs-NWchecker.ps1 -t 30 -ssid yo1-mobile -interface en1)
   - -t [interval (second)] to check the process specified in the number of seconds. (Can be specified from 3 seconds to 3600 seconds.) Example: -t 30
   - -ssid [WiFi-SSID] specified WiFi SSID to be checked. Example: -ssid yo1-007
+  - -bssid [WiFi-BSSID] BSSID is not SSID. specified WiFi BSSID to be checked. Example: -bssid XX:XX:XX:XX:XX:XX
   - -interface [ethernet device name] specified USB tethering interface to be checked. Example: -interface 'en1'
 
 - If your WorkDocs is started with administrative privileges, PowerShell also start with administrator privileges.
@@ -74,6 +75,7 @@ Amazon WorkDocs sync クライアントをある特定のWiFiに接続されて�
 - powershell workdocs-NWchecker.ps1 を実行。（例： powershell workdocs-NWchecker.ps1 -t 30 -ssid yo1-mobile -interface 'Bluetooth ネットワーク接続' ）
   - -t  [interval(second) ] 指定した秒数でプロセスをチェックする。（3秒から3600秒まで指定可能。）　例： -t 30
   - -ssid [WiFi-SSID ] 指定したWiFi SSIDをチェック対象にする。　　例： -ssid yo1-007
+  - -bssid [WiFi-BSSID] BSSIDはSSIDと異なります。同じSSIDでAPを設定していても、BSSIDは異なるのが一般的です。指定したBSSIDをチェック対象にする。 例: -bssid XX:XX:XX:XX:XX:XX
   - -interface [デバイス名] 指定したデバイス名のステータスをチェック対象にする。デバイス名はipconfig(Win), ifconfig(MacOS)で探してください。　例： -interface 'Bluetooth ネットワーク接続' ※シングルクォーテーションで囲む('')
 
 - WorkDocsが管理者権限で起動されている場合は、PowerShellも管理者権限で起動する。
