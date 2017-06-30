@@ -70,7 +70,7 @@ Amazon WorkDocs sync クライアントをある特定のWiFiに接続されて�
   - ./install.sh
 
 
-## 使用方法（ver. 0.3の場合）
+## 使用方法（ver. 0.4の場合）
 
 - powershell workdocs-NWchecker.ps1 を実行。（例： powershell workdocs-NWchecker.ps1 -t 30 -ssid yo1-mobile -interface 'Bluetooth ネットワーク接続' ）
   - -t  [interval(second) ] 指定した秒数でプロセスをチェックする。（3秒から3600秒まで指定可能。）　例： -t 30
